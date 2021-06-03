@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.broadcastexample.databinding.ActivityMainBinding
+import com.example.broadcastexample.receivers.IncomingCallReceiver
 import com.example.broadcastexample.receivers.MessageReceiver
 import com.example.broadcastexample.receivers.TimeBroadcastReceiver
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var br: BroadcastReceiver? = null
     private val timeBroadcastReceiver = TimeBroadcastReceiver()
+    private val callReceiver = IncomingCallReceiver()
 
     private val WHERE_MY_CAT_ACTION = "com.example.broadcastexample.CAT"
     private val ACTION_POWER_DISCONNECTION = "android.intent.action.ACTION_POWER_DISCONNECTED"
@@ -47,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         filter.addAction(WHERE_MY_CAT_ACTION)
         filter.addAction(ACTION_POWER_DISCONNECTION)
         registerReceiver(br, filter)
+
+        val incomingCallFilter = IntentFilter("android.intent.action.PHONE_STATE")
+        registerReceiver(callReceiver, incomingCallFilter)
     }
 
     override fun onDestroy() {

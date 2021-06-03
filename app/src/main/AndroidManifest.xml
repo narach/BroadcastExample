@@ -3,6 +3,10 @@
     package="com.example.broadcastexample">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+<!--    <uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
+<!--    <uses-permission android:name="android.permission.RECEIVE_SMS"/>-->
+<!--    <uses-permission android:name="android.permission.READ_SMS"/>-->
 
     <application
         android:allowBackup="true"
@@ -31,6 +35,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.IncomingCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
 
