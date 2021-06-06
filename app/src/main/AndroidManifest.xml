@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
 <!--    <uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
 <!--    <uses-permission android:name="android.permission.RECEIVE_SMS"/>-->
 <!--    <uses-permission android:name="android.permission.READ_SMS"/>-->
@@ -41,6 +44,9 @@
         <receiver android:name=".receivers.IncomingCallReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
             </intent-filter>
         </receiver>
 

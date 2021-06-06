@@ -1,37 +1,47 @@
 package com.example.broadcastexample
 
+import android.Manifest
 import android.content.BroadcastReceiver
-import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.broadcastexample.databinding.ActivityMainBinding
 import com.example.broadcastexample.receivers.IncomingCallReceiver
-import com.example.broadcastexample.receivers.MessageReceiver
 import com.example.broadcastexample.receivers.TimeBroadcastReceiver
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val permRequestCode = 2
 
     private lateinit var binding: ActivityMainBinding
     private var br: BroadcastReceiver? = null
     private val timeBroadcastReceiver = TimeBroadcastReceiver()
     private val callReceiver = IncomingCallReceiver()
 
-    private val WHERE_MY_CAT_ACTION = "com.example.broadcastexample.CAT"
-    private val ACTION_POWER_DISCONNECTION = "android.intent.action.ACTION_POWER_DISCONNECTED"
-    private val ALARM_MESSAGE = "Срочно пришлите кота!"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_PHONE_NUMBERS
+                ),
+                permRequestCode
+            )
+        }
+
         binding.apply {
             btnSendMessage.setOnClickListener {
-                sendMessage()
             }
 
             btnRegister.setOnClickListener {
@@ -43,15 +53,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        br = MessageReceiver()
-//        val filter = IntentFilter(WHERE_MY_CAT_ACTION)
-        val filter = IntentFilter()
-        filter.addAction(WHERE_MY_CAT_ACTION)
-        filter.addAction(ACTION_POWER_DISCONNECTION)
-        registerReceiver(br, filter)
-
-        val incomingCallFilter = IntentFilter("android.intent.action.PHONE_STATE")
-        registerReceiver(callReceiver, incomingCallFilter)
     }
 
     override fun onDestroy() {
@@ -65,14 +66,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-    }
-
-    private fun sendMessage() {
-        val intent = Intent()
-        intent.action = WHERE_MY_CAT_ACTION
-        intent.putExtra("com.example.broadcastexample.Message", ALARM_MESSAGE)
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        sendBroadcast(intent)
     }
 
     private fun registerBroadcastReceiver() {
